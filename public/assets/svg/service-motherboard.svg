@@ -1,0 +1,39 @@
+<svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_2157_670)">
+<g clip-path="url(#clip1_2157_670)">
+<g clip-path="url(#clip2_2157_670)">
+<path d="M58.5716 58.5713H2.85728V27.1428H1.42871V21.4285H2.85728V15.7142H1.42871V8.57132H2.85728V1.42847H58.5716V58.5713Z" stroke="white" stroke-width="2.85714" stroke-linejoin="round"/>
+<path d="M17.1426 8.57129V12.857" stroke="white" stroke-width="2.85714" stroke-linejoin="round"/>
+<path d="M22.8574 8.57129V12.857" stroke="white" stroke-width="2.85714" stroke-linejoin="round"/>
+<path d="M17.1426 27.1428V31.4285" stroke="white" stroke-width="2.85714" stroke-linejoin="round"/>
+<path d="M22.8574 27.1428V31.4285" stroke="white" stroke-width="2.85714" stroke-linejoin="round"/>
+<path d="M8.57129 17.1428H12.857" stroke="white" stroke-width="2.85714" stroke-linejoin="round"/>
+<path d="M8.57129 22.8569H12.857" stroke="white" stroke-width="2.85714" stroke-linejoin="round"/>
+<path d="M27.1426 22.8569H31.4283" stroke="white" stroke-width="2.85714" stroke-linejoin="round"/>
+<path d="M27.1426 17.1428H31.4283" stroke="white" stroke-width="2.85714" stroke-linejoin="round"/>
+<path d="M27.1431 12.8569H12.8574V27.1426H27.1431V12.8569Z" stroke="#FFC400" stroke-width="2.85714" stroke-linejoin="round"/>
+<path d="M50 25.7141V28.5713" stroke="white" stroke-width="2.85714" stroke-linejoin="round"/>
+<path d="M50 48.5713V51.4284" stroke="white" stroke-width="2.85714" stroke-linejoin="round"/>
+<path d="M50 31.4285V45.7142" stroke="#FFC400" stroke-width="2.85714" stroke-linejoin="round"/>
+<path d="M44.2861 25.7141V28.5713" stroke="white" stroke-width="2.85714" stroke-linejoin="round"/>
+<path d="M44.2861 48.5713V51.4284" stroke="white" stroke-width="2.85714" stroke-linejoin="round"/>
+<path d="M44.2861 31.4285V45.7142" stroke="#FFC400" stroke-width="2.85714" stroke-linejoin="round"/>
+<path d="M49.9997 12.8569H37.1426V21.4284H49.9997V12.8569Z" stroke="white" stroke-width="2.85714" stroke-linejoin="round"/>
+<path d="M8.57129 38.5713H38.5713" stroke="white" stroke-width="2.85714" stroke-linejoin="round"/>
+<path d="M8.57129 44.2856H38.5713" stroke="#FFC400" stroke-width="2.85714" stroke-linejoin="round"/>
+<path d="M8.57129 50H38.5713" stroke="white" stroke-width="2.85714" stroke-linejoin="round"/>
+</g>
+</g>
+</g>
+<defs>
+<clipPath id="clip0_2157_670">
+<rect width="60" height="60" fill="white"/>
+</clipPath>
+<clipPath id="clip1_2157_670">
+<rect width="60" height="60" fill="white"/>
+</clipPath>
+<clipPath id="clip2_2157_670">
+<rect width="60" height="60" fill="white"/>
+</clipPath>
+</defs>
+</svg>
