@@ -299,7 +299,7 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-r from-[#080808] via-[#080808]/82 to-[#080808]/18" />
 
           <div className="relative z-10 px-5 py-6 sm:px-8 lg:px-12">
-            <header className="-mx-5 px-5 py-4 sm:-mx-8 sm:px-8 lg:-mx-12 lg:px-12">
+            <header className="-mx-5 px-5 pb-4 sm:-mx-8 sm:px-8 lg:-mx-12 lg:px-12">
               <div className="flex items-center justify-between gap-6">
                 <a
                   href={homeHref}
