@@ -1,17 +1,19 @@
 "use client";
 
 import { useState } from "react";
+import { getHomeHref, withBasePath } from "@/lib/site";
 
-const logoIcon = "/assets/figma/743ad2c0373400c4d991a51a2a8c66c42a53ddb4.png";
-const heroMainImage = "/assets/figma/gallery-4.jpg";
-const aboutLeftImage = "/assets/figma/about-pc-left.jpg";
-const aboutRightImage = "/assets/figma/about-pc-right.jpg";
+const homeHref = getHomeHref();
+const logoIcon = withBasePath("/assets/figma/743ad2c0373400c4d991a51a2a8c66c42a53ddb4.png");
+const heroMainImage = withBasePath("/assets/figma/gallery-4.jpg");
+const aboutLeftImage = withBasePath("/assets/figma/about-pc-left.jpg");
+const aboutRightImage = withBasePath("/assets/figma/about-pc-right.jpg");
 const socialLinks = [
-  { label: "Telegram", icon: "/assets/social/telegram.png" },
-  { label: "VK", icon: "/assets/social/vk.png" },
-  { label: "WhatsApp", icon: "/assets/social/whatsapp.png" },
-  { label: "Twitter", icon: "/assets/social/twitter.png" },
-  { label: "Snapchat", icon: "/assets/social/snapchat.png" },
+  { label: "Telegram", icon: withBasePath("/assets/social/telegram.png") },
+  { label: "VK", icon: withBasePath("/assets/social/vk.png") },
+  { label: "WhatsApp", icon: withBasePath("/assets/social/whatsapp.png") },
+  { label: "Twitter", icon: withBasePath("/assets/social/twitter.png") },
+  { label: "Snapchat", icon: withBasePath("/assets/social/snapchat.png") },
 ];
 
 const navLinks = [
@@ -25,7 +27,7 @@ const navLinks = [
   { label: "Галерея", href: "#gallery" },
 ];
 
-const services = [
+const serviceDefinitions = [
   { title: "Замена/добавление оперативной памяти", icon: "/assets/svg/service-ram.svg" },
   { title: "Замена/добавление SSD или жёсткого диска", icon: "/assets/svg/service-drive.svg" },
   { title: "Замена видеокарты", icon: "/assets/svg/service-gpu.svg" },
@@ -35,8 +37,12 @@ const services = [
   { title: "Замена кулеров", icon: "/assets/svg/service-cooler.svg" },
   { title: "Установка водяного охлаждения", icon: "/assets/svg/service-water.svg" },
 ];
+const services = serviceDefinitions.map((service) => ({
+  ...service,
+  icon: withBasePath(service.icon),
+}));
 
-const builds = [
+const buildDefinitions = [
   {
     id: "12876349",
     image: "/assets/figma/build-red.png",
@@ -90,12 +96,16 @@ const builds = [
     price: "От 150 до 200",
   },
 ];
+const builds = buildDefinitions.map((build) => ({
+  ...build,
+  image: withBasePath(build.image),
+}));
 const buildSlides = Array.from({ length: 5 }, (_, id) => ({
   id,
   items: builds,
 }));
 
-const stages = [
+const stageDefinitions = [
   {
     title: "Заявка",
     icon: "/assets/svg/stage-1.svg",
@@ -127,15 +137,23 @@ const stages = [
     text: "Принимаем оплату наличными или картой и выдаём гарантийный талон на комплектующие и выполненные работы.",
   },
 ];
+const stages = stageDefinitions.map((stage) => ({
+  ...stage,
+  icon: withBasePath(stage.icon),
+}));
 
-const galleryImages = [
+const galleryImageDefinitions = [
   { title: "Игровая зона", image: "/assets/figma/gallery-1.jpg" },
   { title: "Виртуальная станция", image: "/assets/figma/gallery-2.jpg" },
   { title: "Стриминг и монтаж", image: "/assets/figma/gallery-3.jpg" },
   { title: "Ночная сборка", image: "/assets/figma/hero-main.jpg" },
 ];
+const galleryImages = galleryImageDefinitions.map((image) => ({
+  ...image,
+  image: withBasePath(image.image),
+}));
 
-const partnerLogos = [
+const partnerLogoDefinitions = [
   { alt: "Партнёр 1", src: "/assets/svg/partner-1.svg" },
   { alt: "Партнёр 2", src: "/assets/svg/partner-2.svg" },
   { alt: "Партнёр 3", src: "/assets/svg/partner-3.svg" },
@@ -145,6 +163,10 @@ const partnerLogos = [
   { alt: "Партнёр 7", src: "/assets/svg/partner-7.svg" },
   { alt: "Партнёр 8", src: "/assets/svg/partner-8.svg" },
 ];
+const partnerLogos = partnerLogoDefinitions.map((logo) => ({
+  ...logo,
+  src: withBasePath(logo.src),
+}));
 const partnerCarouselLogos = [...partnerLogos, ...partnerLogos];
 
 function SectionHeading({
@@ -280,7 +302,7 @@ export default function Home() {
             <header className="-mx-5 px-5 py-4 sm:-mx-8 sm:px-8 lg:-mx-12 lg:px-12">
               <div className="flex items-center justify-between gap-6">
                 <a
-                  href="/"
+                  href={homeHref}
                   className="-my-4 -ml-5 flex min-h-[88px] items-center gap-4 rounded-br-[2rem] bg-accent px-6 py-5 text-white sm:-my-4 sm:-ml-8 sm:px-8 lg:-my-4 lg:-ml-12 lg:min-w-[273px] lg:rounded-br-[2.25rem]"
                 >
                   <img src={logoIcon} alt="Логотип компании" className="h-10 w-10 object-contain" />
@@ -292,7 +314,7 @@ export default function Home() {
 
                 <nav className="hidden items-center gap-5 text-sm text-white/80 lg:flex xl:ml-8 xl:mr-auto">
                   {navLinks.map((item) => (
-                    <a key={item.label} href={item.href} className="transition hover:text-accent">
+                    <a key={item.label} href={item.href === "/" ? homeHref : item.href} className="transition hover:text-accent">
                       {item.label}
                     </a>
                   ))}
@@ -318,7 +340,7 @@ export default function Home() {
                   {navLinks.map((item) => (
                     <a
                       key={item.label}
-                      href={item.href}
+                      href={item.href === "/" ? homeHref : item.href}
                       onClick={() => setIsMobileMenuOpen(false)}
                       className="rounded-full border border-white/10 px-4 py-3 transition hover:border-accent hover:text-accent"
                     >
