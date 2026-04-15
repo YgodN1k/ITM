@@ -4,6 +4,7 @@ import { type ChangeEvent, type FormEvent, useState } from "react";
 import { getHomeHref, withBasePath } from "@/lib/site";
 
 const MIN_FORM_FILL_TIME_MS = 3000;
+const MAX_NAME_LENGTH = 35;
 
 function formatRussianPhone(value: string) {
   let digits = value.replace(/\D/g, "");
@@ -55,6 +56,17 @@ function isCompleteRussianPhone(value: string) {
   const digits = value.replace(/\D/g, "");
 
   return digits.length === 11 && digits.startsWith("7");
+}
+
+function isSpammyName(value: string) {
+  const normalizedName = value.trim();
+
+  return (
+    /https?:\/\//i.test(normalizedName) ||
+    /www\./i.test(normalizedName) ||
+    /@/.test(normalizedName) ||
+    /(.)\1{5,}/i.test(normalizedName)
+  );
 }
 
 const homeHref = getHomeHref();
@@ -329,21 +341,33 @@ function StageCard({ stage }: { stage: (typeof stages)[number] }) {
 export default function Home() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeBuildSlide, setActiveBuildSlide] = useState(0);
+  const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [spamTrap, setSpamTrap] = useState("");
   const [formStartedAt] = useState(() => Date.now());
   const [formMessage, setFormMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handlePhoneChange = (event: ChangeEvent<HTMLInputElement>) => {
     setPhone(formatRussianPhone(event.target.value));
     setFormMessage("");
   };
 
-  const handleContactSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setName(event.target.value.slice(0, MAX_NAME_LENGTH));
+    setFormMessage("");
+  };
+
+  const handleContactSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (spamTrap.trim() || Date.now() - formStartedAt < MIN_FORM_FILL_TIME_MS) {
       setFormMessage("Похоже на автоматическую отправку. Попробуйте ещё раз.");
+      return;
+    }
+
+    if (isSpammyName(name)) {
+      setFormMessage("РџРѕР¶Р°Р»СѓР№СЃС‚Р°, СѓРєР°Р¶РёС‚Рµ РёРјСЏ Р±РµР· СЃСЃС‹Р»РѕРє Рё СЃРїР°Рј-СЃРёРјРІРѕР»РѕРІ.");
       return;
     }
 
@@ -352,7 +376,34 @@ export default function Home() {
       return;
     }
 
-    setFormMessage("Спасибо! Номер прошёл проверку.");
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch("/api/leads", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          phone,
+          website: spamTrap,
+          startedAt: formStartedAt,
+        }),
+      });
+      const result = await response.json();
+
+      setFormMessage(result.message ?? "Спасибо! Заявка отправлена.");
+
+      if (response.ok) {
+        setName("");
+        setPhone("");
+      }
+    } catch {
+      setFormMessage("Не удалось отправить заявку. Попробуйте позже.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const goToBuildSlide = (index: number) => {
@@ -698,6 +749,10 @@ export default function Home() {
             <form className="mt-8 space-y-4" onSubmit={handleContactSubmit}>
               <input
                 type="text"
+                name="name"
+                maxLength={MAX_NAME_LENGTH}
+                value={name}
+                onChange={handleNameChange}
                 placeholder="Имя"
                 className="w-full rounded-full border border-transparent bg-[#222] px-6 py-4 text-white outline-none transition placeholder:text-white/40 focus:border-accent"
               />
@@ -735,7 +790,7 @@ export default function Home() {
                 Ознакомлен(а) с пользовательским соглашением
               </label>
               <div className="pt-4 text-center">
-                <button type="submit" className="pill-button-primary min-w-44">
+                <button type="submit" disabled={isSubmitting} className="pill-button-primary min-w-44 disabled:cursor-not-allowed disabled:opacity-60">
                   Отправить
                 </button>
               </div>
