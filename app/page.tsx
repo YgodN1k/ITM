@@ -1,7 +1,61 @@
 "use client";
 
-import { useState } from "react";
+import { type ChangeEvent, type FormEvent, useState } from "react";
 import { getHomeHref, withBasePath } from "@/lib/site";
+
+const MIN_FORM_FILL_TIME_MS = 3000;
+
+function formatRussianPhone(value: string) {
+  let digits = value.replace(/\D/g, "");
+
+  if (!digits) {
+    return "";
+  }
+
+  if (digits.startsWith("8")) {
+    digits = `7${digits.slice(1)}`;
+  }
+
+  if (!digits.startsWith("7")) {
+    digits = `7${digits}`;
+  }
+
+  const phoneDigits = digits.slice(1, 11);
+  const area = phoneDigits.slice(0, 3);
+  const first = phoneDigits.slice(3, 6);
+  const second = phoneDigits.slice(6, 8);
+  const third = phoneDigits.slice(8, 10);
+
+  let formattedPhone = "+7";
+
+  if (area) {
+    formattedPhone += ` (${area}`;
+  }
+
+  if (area.length === 3) {
+    formattedPhone += ")";
+  }
+
+  if (first) {
+    formattedPhone += ` ${first}`;
+  }
+
+  if (second) {
+    formattedPhone += `-${second}`;
+  }
+
+  if (third) {
+    formattedPhone += `-${third}`;
+  }
+
+  return formattedPhone;
+}
+
+function isCompleteRussianPhone(value: string) {
+  const digits = value.replace(/\D/g, "");
+
+  return digits.length === 11 && digits.startsWith("7");
+}
 
 const homeHref = getHomeHref();
 const logoIcon = withBasePath("/assets/figma/743ad2c0373400c4d991a51a2a8c66c42a53ddb4.png");
@@ -275,6 +329,31 @@ function StageCard({ stage }: { stage: (typeof stages)[number] }) {
 export default function Home() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeBuildSlide, setActiveBuildSlide] = useState(0);
+  const [phone, setPhone] = useState("");
+  const [spamTrap, setSpamTrap] = useState("");
+  const [formStartedAt] = useState(() => Date.now());
+  const [formMessage, setFormMessage] = useState("");
+
+  const handlePhoneChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setPhone(formatRussianPhone(event.target.value));
+    setFormMessage("");
+  };
+
+  const handleContactSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (spamTrap.trim() || Date.now() - formStartedAt < MIN_FORM_FILL_TIME_MS) {
+      setFormMessage("Похоже на автоматическую отправку. Попробуйте ещё раз.");
+      return;
+    }
+
+    if (!isCompleteRussianPhone(phone)) {
+      setFormMessage("Введите номер в формате +7 (999) 999-99-99.");
+      return;
+    }
+
+    setFormMessage("Спасибо! Номер прошёл проверку.");
+  };
 
   const goToBuildSlide = (index: number) => {
     setActiveBuildSlide(index);
@@ -616,23 +695,47 @@ export default function Home() {
               Оставьте <span className="text-accent">заявку</span>
             </h2>
             <p className="mt-3 text-center text-white/60">И мы перезвоним вам в течение 10 мин.</p>
-            <form className="mt-8 space-y-4">
+            <form className="mt-8 space-y-4" onSubmit={handleContactSubmit}>
               <input
                 type="text"
                 placeholder="Имя"
                 className="w-full rounded-full border border-transparent bg-[#222] px-6 py-4 text-white outline-none transition placeholder:text-white/40 focus:border-accent"
               />
+              <div className="hidden" aria-hidden="true">
+                <label>
+                  Website
+                  <input
+                    type="text"
+                    name="website"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={spamTrap}
+                    onChange={(event) => setSpamTrap(event.target.value)}
+                  />
+                </label>
+              </div>
               <input
                 type="tel"
+                name="phone"
+                inputMode="tel"
+                autoComplete="tel"
+                maxLength={18}
+                value={phone}
+                onChange={handlePhoneChange}
                 placeholder="Телефон"
                 className="w-full rounded-full border border-transparent bg-[#222] px-6 py-4 text-white outline-none transition placeholder:text-white/40 focus:border-accent"
               />
+              {formMessage ? (
+                <p className="text-center text-sm text-white/60" aria-live="polite">
+                  {formMessage}
+                </p>
+              ) : null}
               <label className="flex items-center gap-3 text-sm text-white/55">
                 <input type="checkbox" className="h-4 w-4 accent-accent" />
                 Ознакомлен(а) с пользовательским соглашением
               </label>
               <div className="pt-4 text-center">
-                <button type="button" className="pill-button-primary min-w-44">
+                <button type="submit" className="pill-button-primary min-w-44">
                   Отправить
                 </button>
               </div>
