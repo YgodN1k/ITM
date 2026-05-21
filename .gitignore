@@ -3,3 +3,9 @@ node_modules/
 dist/
 build/
 out/
+.env*.local
+.vercel
+.env*
+*.md
+*.tsbuildinfo
+dev.log
