@@ -1,7 +1,7 @@
 import { getServerSupabase, type Build } from "@/lib/supabase";
 import HomeClient from "./HomeClient";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const supabase = getServerSupabase();
